@@ -9,17 +9,25 @@
 
     </head>
 <body>
+    <div class="theme">
+        <label class="theme-switch">
+            <input type="checkbox"
+             id="theme-toggle" class="input">
+             <span class="slider"></span>
+        </label>
+        <div class="progress" id="progressN">Card 0 of the 7</div></div>
+        <div class="progressbox"><div class="progress-bar" id ="progressBar"></div></div>
+    </div>
     <div class="container">
-        <div class="progress">Card 1 of the 10</div>
-        <div class="flashcard" id="flashcard">
-            <div class="flashcard-inner">
-                <div class="front">Question here!</div>
-                <div class="back">Answer here!</div>
-            </div>
+        
+        
+        <div class="cardlist" id="cardlist">
+            
+        </div>
         </div>
         <div class="button">
-            <button id="iknowBT">I Know</button>
-            <button id="dontknowBT">Don't Know</button>
+            <button idonclick="increaseprogress()" id="iknow">I Know</button>
+            <button onclick="decreaseprogress()" id="dontknow">Don't Know</button>
         </div>
     </div>
     <script src="script.js"></script>
