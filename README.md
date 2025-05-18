@@ -55,4 +55,4 @@ MIT — free to use, modify, and share
 
 ---
 
-> Made with caffeine, code, and creativity at \[Hackathon Name], 2025.
+
