@@ -83,6 +83,7 @@ input[type="checkbox"] {
 
 .cardlist {
   position: relative;
+  left: 40px;
   width: 600px;
   height: 300px;
   transform-style: preserve-3d;
@@ -192,7 +193,7 @@ input[type="checkbox"] {
 button {
   position: relative;
   top: 200px;
-  right: 620px;
+  right: 575px;
   display: inline-block;
   padding: 12px 24px;
   font-size: 1rem;
