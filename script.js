@@ -1,152 +1,167 @@
-body {
-  margin: 0;
-  font-family: monospace;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transition: background-image 0.5s ease;
+const cardlist = document.getElementById('cardlist');
+const total = 7;
+const cards = [];
+let currentIndex = 0;
+const angleStep = 360 / total;
+const themeToggle = document.getElementById('theme-toggle');
+const answered = new Array(total).fill(null);
+
+function disableButtons() {
+    document.getElementById('iknow').disabled = true;
+    document.getElementById('dontknow').disabled = true;
+}
+function enableButtons() {
+    document.getElementById('iknow').disabled = false;
+    document.getElementById('dontknow').disabled = false;
 }
 
-[data-theme="light"] body {
-    background-image: url(Dark-theme.jpg);
+
+const max = 7;
+
+function updateProgress() {
+  const progressBar = document.getElementById('progressBar');
+    const progressN = document.getElementById('progressN');
+    const knownCount = answered.filter(a => a === "know"). length;
+    const percent = (answered.filter(a => a !== null).length / max) * 100
+    
+    progressBar.style.width = percent + '%';
+    progressN.textContent = 'Card' + ' ' + (currentIndex + 1) + ' ' + 'of' + ' ' + '7' ;
 }
-[data-theme="dark"] body {
-    background-image: url(Light-theme.png);
-}
-.container {
-    position: relative;
-  text-align: center;
-  right: 200px;
-  
-}
-.theme {
-    position: relative;
-    left: 900px;
-    bottom: 245px;
+function updateButtonState() {
+    const knowBtn = document.getElementById('iknow');
+    const dontKnowBtn = document.getElementById('dontknow');
+
+    const value = answered[currentIndex];
+    if (value === "know") {
+        knowBtn.disabled = true;
+        dontKnowBtn.disabled = false;
+    } else if (value === "dontknow") {
+        knowBtn.disabled = false;
+        dontKnowBtn.disabled = true;
+    } else {
+        knowBtn.disabled = false;
+        dontKnowBtn.disabled = false;
+    }
 }
 
-#theme-toggle:checked + .slider {
-    background-color: #0fbcf9;
+function increaseprogress(){
+    
+    if (answered[currentIndex] !== "know") {
+        answered[currentIndex] = "know";
+        updateProgress();
+        updateButtonState();}
+        else {
+          console.log(`card ${currentIndex + 1} already marked KNOW`);
+        }
 }
-#theme-toggle:checked + .slider::before{
-    transform: translateX(26px);
-}
-.slider {
-  position: absolute;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-  background-color: #ccc;
-  border-radius: 34px;
-  transition: background-color 0.4s;
-  cursor: pointer;
-}
-
-.slider::after {
-    content: "🌙";
-    position: absolute;
-    left: 4px;
-    top: 46%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    opacity: 1;
-    transition: 0.4s;
-}
-#theme-toggle:checked + .slider::after {
-    content: "☀️";
-    left: 31px;
-    top: 16px;
-    opacity: 1;
+function decreaseprogress(){
+    if (answered[currentIndex] !== "dontknow") {
+    answered[currentIndex] = "dontknow"
+    updateProgress();
+    updateButtonState();}
+    else {
+        console.log(`Card ${currentIndex + 1} already marked DON'T KNOW`);}
+    
 }
 
-.progress {
-    position: relative;
-  margin-bottom: 20px;
-  font-size: 19px;
-  color: #fff;
-  right: 423px;
-  bottom: 40px;
+
+function toggleTheme() {
+  if (themeToggle.checked) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+  }
 }
 
-.cardlist {
-  position: relative;
-  width: 600px;
-  height: 300px;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  margin: 0 auto;
+const savedtherme = localStorage.getItem('theme');
+if (savedtherme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeToggle.checked = true;
+} else {
+  document.documentElement.setAttribute('data-theme', 'light');
+  themeToggle.checked = false;
 }
+themeToggle.addEventListener('change', toggleTheme);
 
-.card {
-  position: absolute;
-  width: 200px;
-  height: 150px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
-  top: 75px; 
-  left: 200px; 
-}
-.card .inner {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.6s;
-}
+document.getElementById('iknow').addEventListener('click', () => {
+  increaseprogress();
+  updateButtonState();
+});
 
-.card.flipped .inner {
-    transform: rotateY(180deg);
+document.getElementById('dontknow').addEventListener('click', () => {
+  decreaseprogress();
+  updateButtonState();
+});
 
-}
-.card .front, .card .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    box-sizing: border-box;
-    padding: 10px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-}
-.card .front {
-    background: linear-gradient(135deg, #fff, #f0f0f0);
 
-}
-.card .back {
-    background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
-    transform: rotateY(180deg);
-}
-.progressbox {
-    position: relative;
-      width: 400px;
-      background-color: #6e6e6e;
-      border-radius: 5px;
-      overflow: hidden;
-      height: 10px;
-      margin: 20px 0;
-      bottom: 250px;
-      left: 300px;
-}
-.progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #ff7e5f,#76ff53);
-      text-align: center;
-      color: white;
-      line-height: 25px;
-      transition: width 0.3s ease;
-}
+window.addEventListener('DOMContentLoaded', () => {
+  for (let i = 0; i < total; i++) {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const inner = document.createElement('div');
+    inner.className = 'inner';
+
+    const front = document.createElement('div');
+    front.className = 'front';
+    front.textContent = `Question ${i + 1}`;
+
+    const back = document.createElement('div');
+    back.className = 'back';
+    back.textContent = `Answer ${i + 1}`;
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    card.appendChild(inner);
+    cardlist.appendChild(card);
+    cards.push(card);
+
+    card.addEventListener('click', () => {
+      if (i !== currentIndex) {
+        rotateTo(i);
+      } else {
+        card.classList.toggle('flipped');
+      }
+    });
+  }
+
+  function rotateTo(index) {
+    currentIndex = index;
+    updateCardPositions();
+    updateButtonState();
+    updateProgress();
+  }
+
+  function updateCardPositions() {
+    const radius = 300;
+
+    cards.forEach((card, i) => {
+      const diff = i - currentIndex;
+      const angle = diff * angleStep;
+      const rad = (angle * Math.PI) / 180;
+      const x = Math.sin(rad) * radius;
+      const z = Math.cos(rad) * radius;
+      const scale = i === currentIndex ? 1 : 0.8;
+      const blur = i === currentIndex ? 'none' : 'blur(3px)';
+      const opacity = i === currentIndex ? 1 : 0.6;
+
+      card.style.transform = `
+        translateX(${x}px)
+        translateZ(${z}px)
+        scale(${scale})
+      `;
+      card.style.zIndex = i === currentIndex ? 100 : 100 - Math.abs(diff);
+      card.style.filter = blur;
+      card.style.opacity = opacity;
+
+      if (i !== currentIndex) {
+        card.classList.remove('flipped');
+      }
+    });
+  }
+
+
+  updateCardPositions();
+});
