@@ -23,6 +23,15 @@ body {
   right: 200px;
   
 }
+input[type="checkbox"] {
+  appearance: none; 
+  -webkit-appearance: none; 
+  width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
+}
+
 .theme {
     position: relative;
     left: 900px;
@@ -79,15 +88,17 @@ body {
   transform-style: preserve-3d;
   perspective: 1000px;
   margin: 0 auto;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.1));
+  transition: filter 0.5s ease;
 }
 
 .card {
   position: absolute;
   width: 200px;
   height: 150px;
-  background: white;
+  background: transparent;
   border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--card-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,13 +106,18 @@ body {
   transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
   top: 75px; 
   left: 200px; 
+  color: var(--card-text-color);
+  user-select: none;
+}
+.card:hover {
+    box-shadow: var(--card-shadow-hover);
 }
 .card .inner {
     width: 100%;
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.04, 0, 0.2, 1);
 }
 
 .card.flipped .inner {
@@ -119,17 +135,39 @@ body {
     justify-content: center;
     font-size: 1.2rem;
     box-sizing: border-box;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
+    color: var(--card-text-color);
     padding: 10px;
+    user-select: none;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    transition: background 0.5s ease, color 0.5s ease;
 }
 .card .front {
-    background: linear-gradient(135deg, #fff, #f0f0f0);
+    background: var(--card-front-bg);
 
 }
 .card .back {
-    background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+    background: var(--card-back-bg);
     transform: rotateY(180deg);
 }
+
+:root {
+  
+  --card-front-bg: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+  --card-back-bg: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  --card-text-color: #fff;
+  --card-shadow: 0 15px 25px rgba(255, 105, 180, 0.5);
+  --card-shadow-hover: 0 20px 35px rgba(255, 105, 180, 0.7);
+}
+
+[data-theme="light"] {
+  --card-front-bg: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+  --card-back-bg: linear-gradient(135deg, #ffd1dc 0%, #ffe6eb 100%);
+  --card-text-color: #333;
+  --card-shadow: 0 15px 25px rgba(255, 182, 193, 0.4);
+  --card-shadow-hover: 0 20px 35px rgba(255, 182, 193, 0.6);
+}
+
 .progressbox {
     position: relative;
       width: 400px;
@@ -149,4 +187,71 @@ body {
       color: white;
       line-height: 25px;
       transition: width 0.3s ease;
+}
+
+button {
+  position: relative;
+  top: 200px;
+  right: 620px;
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  z-index: 1;
+   box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+}
+
+
+button::before,
+button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #ffb6c1 0%,
+    #ff69b4 50%,
+    #ff1493 100%
+  );
+  transform: scaleY(0);
+  transform-origin: var(--gradientPos);
+  transition: transform 0.4s ease;
+  z-index: -1;
+}
+
+
+button::before {
+  --gradientPos: 50% 0%;
+}
+
+
+button::after {
+  --gradientPos: 50% 100%;
+}
+
+
+button:hover::before,
+button:hover::after {
+  transform: scaleY(1);
+}
+
+
+button:hover {
+  transform: translateY(-2px);
+}
+button:active {
+  transform: translateY(1px);
+}
+[data-theme = "light"] button {
+    color: white;
+}
+[data-theme = "dark"] button {
+    color: #333;
 }
